@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Login</title>
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            background-color: #2b211f;
+            font-family: 'Ubuntu Sans', sans-serif;
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+            margin: 0;
+            padding: 0;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .tv-on-animation {
+            animation: tvOn 0.5s ease-in-out forwards;
+        }
+
+        .tv-off-animation {
+            animation: tvOff 0.5s ease-in-out forwards;
+        }
+
+        @keyframes tvOn {
+            0% {
+                transform: scaleY(0);
+            }
+            40% {
+                transform: scaleY(1.2);
+            }
+            60% {
+                transform: scaleY(0.8);
+            }
+            80% {
+                transform: scaleY(1.05);
+            }
+            100% {
+                transform: scaleY(1);
+            }
+        }
+
+        @keyframes tvOff {
+            0% {
+                transform: scaleY(1);
+            }
+            20% {
+                transform: scaleY(1.05);
+            }
+            50% {
+                transform: scaleY(0.8);
+            }
+            80% {
+                transform: scaleY(1.2);
+            }
+            100% {
+                transform: scaleY(0);
+            }
+        }
+
+        .btn-brilho {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        .btn-brilho:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px 2px #feb2a2;
+        }
+
+        .link-brilho:hover {
+            text-decoration: underline;
+            color: #ff7b7b;
+        }
+
+        .notification-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #feb2a2;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px 2px #feb2a2;
+            transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        }
+
+        .notification-button:hover {
+            box-shadow: 0 0 15px 3px #feb2a2;
+            background-color: #ff9b8d;
+        }
+
+        .notification-button img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-button" onclick="window.location.href='updates.html'">
+        <img src="notificacao.png" alt="Notificações" />
+    </div>
+
+    <div id="main"></div>
+
+    <script type="text/babel">
+        function App() {
+            const [showLogin, setShowLogin] = React.useState(false);
+            const [showPassword, setShowPassword] = React.useState(false);
+            const [showRecovery, setShowRecovery] = React.useState(false);
+            const [securityAnswer, setSecurityAnswer] = React.useState('');
+            const [username, setUsername] = React.useState('');
+            const [password, setPassword] = React.useState('');
+            const [containerClass, setContainerClass] = React.useState('tv-on-animation');
+
+            const togglePasswordVisibility = () => {
+                setShowPassword(!showPassword);
+            };
+
+            const handleRecoveryClick = () => {
+                setContainerClass('tv-on-animation');
+                setShowRecovery(true);
+            };
+
+            const handleCloseRecovery = () => {
+                setContainerClass('tv-off-animation');
+                setTimeout(() => {
+                    setShowRecovery(false);
+                    setSecurityAnswer(''); 
+                    setContainerClass('tv-on-animation');
+                }, 500);
+            };
+
+            const handleCloseLogin = () => {
+                setContainerClass('tv-off-animation');
+                setTimeout(() => {
+                    setShowLogin(false);
+                    setUsername(''); 
+                    setPassword(''); 
+                }, 500);
+            };
+
+            const handleSecurityAnswer = () => {
+                const correctAnswer = ["Paulistas", "paulistas", "Paulista", "paulista"];
+                if (correctAnswer.includes(securityAnswer.trim())) {
+                    alert("Você acertou, cabeçuda! A senha é: 'doce ou anime'");
+                    setContainerClass('tv-off-animation');
+                    setTimeout(() => {
+                        setShowRecovery(false);
+                        setSecurityAnswer('');
+                        setContainerClass('tv-on-animation');
+                    }, 500);
+                } else {
+                    setContainerClass('bg-red-500 tv-on-animation');
+                    alert("Senha incorreta! Acho que você não é a Eisyla, entre em contato com Henrique caso ache que isso é um erro.");
+                    setTimeout(() => {
+                        setShowRecovery(false);
+                        setSecurityAnswer('');
+                        setContainerClass('tv-on-animation');
+                    }, 500);
+                }
+            };
+
+            const handleLogin = () => {
+                const validUsers = ["Eisyla", "eishyla", "Bauni", "bauni", "Eishy", "eishy"];
+                const validPassword = ["doce", "Doce", "Anime", "anime"];
+
+                if (validUsers.includes(username) && validPassword.includes(password)) {
+                    window.location.href = "home.html";
+                } else {
+                    alert("A senha ou usuário estão incorretos! Caso não lembre de sua senha ou nome de usuário, clique em 'Esqueci minha senha");
+                }
+            };
+
+            return (
+                <div className="flex items-center justify-center min-h-screen">
+                    {!showLogin ? (
+                        <div className="text-center">
+                            <h1 className="text-4xl font-bold text-[#feb2a2] mb-6">Olá, Eishy! Vamos entrar?</h1>
+                            <button
+                                onClick={() => {
+                                    setShowLogin(true);
+                                    setContainerClass('tv-on-animation');
+                                }}
+                                className="bg-[#feb2a2] text-[#2b211f] font-bold py-3 px-8 rounded-full btn-brilho"
+                            >
+                                Entrar
+                            </button>
+                        </div>
+                    ) : (
+                        <div className={`${containerClass} bg-[#2b211f] p-8 rounded-2xl shadow-lg w-80 relative border-4 border-[#ffb5a0]`}>
+                            {!showRecovery ? (
+                                <div>
+                                    <div className="absolute -top-12 left-1/2 transform -translate-x-1/2">
+                                        <img src="perfil.jpeg" alt="Profile picture" className="w-24 h-24 rounded-full border-4 border-[#ffb5a0]" />
+                                    </div>
+                                    <div className="absolute top-2 right-2 cursor-pointer text-[#ffb5a0] text-2xl" onClick={handleCloseLogin}>
+                                        <i className="fas fa-times"></i>
+                                    </div>
+                                    <div className="mt-16">
+                                        <div className="mb-4">
+                                            <label className="block text-[#ffb5a0] mb-2" htmlFor="username">Usuário</label>
+                                            <input
+                                                type="text"
+                                                id="username"
+                                                value={username}
+                                                onChange={(e) => setUsername(e.target.value)}
+                                                autoComplete="off"
+                                                className="w-full p-2 rounded-full bg-gray-800 text-[#ffb5a0] focus:outline-none border border-[#ffb5a0]"
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="block text-[#ffb5a0] mb-2" htmlFor="password">Senha</label>
+                                            <div className="relative">
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    id="password"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                    autoComplete="off"
+                                                    className="w-full p-2 rounded-full bg-gray-800 text-[#ffb5a0] focus:outline-none border border-[#ffb5a0]"
+                                                />
+                                                <i
+                                                    className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"} absolute right-3 top-3 text-[#ffb5a0] cursor-pointer`}
+                                                    onClick={togglePasswordVisibility}
+                                                ></i>
+                                            </div>
+                                        </div>
+                                        <button onClick={handleLogin} className="w-full py-2 bg-[#feb2a2] text-[#2b211f] font-bold rounded-full btn-brilho">
+                                            Entrar
+                                        </button>
+                                        <p className="text-center text-[#ffb5a0]">
+                                            <span className="cursor-pointer link-brilho" onClick={handleRecoveryClick}>
+                                                Esqueci minha senha
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div>
+                                    <div className="absolute top-2 right-2 cursor-pointer text-[#ffb5a0] text-2xl" onClick={handleCloseRecovery}>
+                                        <i className="fas fa-times"></i>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-[#ffb5a0] mb-2" htmlFor="securityAnswer">Quem puxa o "R" são os?...</label>
+                                        <input
+                                            type="text"
+                                            id="securityAnswer"
+                                            value={securityAnswer}
+                                            onChange={(e) => setSecurityAnswer(e.target.value)}
+                                            autoComplete="off"
+                                            className="w-full p-2 rounded-full bg-gray-800 text-[#ffb5a0] focus:outline-none border border-[#ffb5a0]"
+                                        />
+                                    </div>
+                                    <button onClick={handleSecurityAnswer} className="w-full py-2 bg-[#feb2a2] text-[#2b211f] font-bold rounded-full btn-brilho">
+                                        Enviar
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('main'));
+    </script>
+</body>
+</html>
+
